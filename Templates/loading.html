@@ -1,0 +1,59 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Loading...</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 0;
+            padding: 0;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            background-color: #000;
+            color: #fff;
+            overflow: hidden;
+        }
+        .loading-screen {
+            text-align: center;
+        }
+        .logo {
+            width: 150px;
+            height: 150px;
+            margin-bottom: 20px;
+        }
+        .typing-text {
+            font-size: 24px;
+            font-weight: bold;
+            overflow: hidden;
+            border-right: 2px solid #fff;
+            white-space: nowrap;
+            margin: 0 auto;
+            animation: typing 3s steps(40, end), blink-caret 0.75s step-end infinite;
+        }
+        @keyframes typing {
+            from { width: 0; }
+            to { width: 100%; }
+        }
+        @keyframes blink-caret {
+            from, to { border-color: transparent; }
+            50% { border-color: #fff; }
+        }
+    </style>
+</head>
+<body>
+    <div class="loading-screen">
+        <img src="{{ url_for('static', filename='logo.png') }}" alt="MetroTex AI Logo" class="logo">
+        <div class="typing-text">The New Era Is Here</div>
+    </div>
+
+    <script>
+        setTimeout(() => {
+            window.location.href = "/main";
+        }, 4000); // Redirect to main app after 4 seconds
+    </script>
+</body>
+</html>

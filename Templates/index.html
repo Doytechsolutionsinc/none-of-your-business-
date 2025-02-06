@@ -1,0 +1,159 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>MetroTex AI</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 0;
+            padding: 0;
+            display: flex;
+        }
+        #sidebar {
+            width: 250px;
+            background-color: #333;
+            color: #fff;
+            height: 100vh;
+            padding: 20px;
+        }
+        #sidebar a {
+            color: #fff;
+            text-decoration: none;
+            display: block;
+            margin: 10px 0;
+        }
+        #main-content {
+            flex: 1;
+            padding: 20px;
+        }
+        #chat-history {
+            width: 100%;
+            height: 300px;
+            border: 1px solid #ccc;
+            padding: 10px;
+            overflow-y: scroll;
+        }
+        #image-container {
+            margin-top: 20px;
+        }
+        #image-container img {
+            max-width: 300px;
+            max-height: 300px;
+        }
+        .theme-toggle {
+            position: fixed;
+            top: 10px;
+            right: 10px;
+        }
+        .popup {
+            display: none;
+            position: fixed;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            background-color: #fff;
+            padding: 20px;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+            z-index: 1000;
+        }
+        .popup button {
+            margin: 5px;
+        }
+    </style>
+</head>
+<body>
+    <!-- Pop-up Message -->
+    <div id="popup" class="popup">
+        <p>For more updates and contact support, join Doy Tech Solutions Inc WhatsApp channel on WhatsApp.</p>
+        <button onclick="joinWhatsApp()">Join</button>
+        <button onclick="closePopup()">Cancel</button>
+    </div>
+
+    <!-- Side Navigation -->
+    <div id="sidebar">
+        <h2>MetroTex AI</h2>
+        <a href="#home">Home</a>
+        <a href="#settings">Settings</a>
+        <a href="#about">About</a>
+    </div>
+
+    <!-- Main Content -->
+    <div id="main-content">
+        <h1>MetroTex AI</h1>
+        <div id="chat-history"></div>
+        <input type="text" id="user-input" placeholder="Type your message here...">
+        <button onclick="sendMessage()">Send</button>
+        <button onclick="createImage()">Create Image</button>
+
+        <div id="image-container">
+            <img id="generated-image" src="" alt="Generated Image">
+        </div>
+
+        <!-- Permissions Section -->
+        <div id="permissions">
+            <h3>Permissions</h3>
+            <button onclick="requestMicrophonePermission()">Allow Microphone Access</button>
+        </div>
+    </div>
+
+    <script>
+        // Show pop-up when the app loads
+        document.addEventListener("DOMContentLoaded", () => {
+            document.getElementById("popup").style.display = "block";
+        });
+
+        // Close pop-up
+        function closePopup() {
+            document.getElementById("popup").style.display = "none";
+        }
+
+        // Redirect to WhatsApp channel
+        function joinWhatsApp() {
+            window.location.href = "https://whatsapp.com/channel/0029Vb05NOOLNSZzhqWQbG1Z";
+        }
+
+        // Request microphone permission
+        function requestMicrophonePermission() {
+            navigator.mediaDevices.getUserMedia({ audio: true })
+                .then(() => alert("Microphone access granted!"))
+                .catch(() => alert("Microphone access denied."));
+        }
+
+        // Send message to MetroTex AI
+        async function sendMessage() {
+            const userInput = document.getElementById("user-input").value;
+            if (!userInput) return;
+
+            const response = await fetch("/send_message", {
+                method: "POST",
+                headers: { "Content-Type": "application/json" },
+                body: JSON.stringify({ message: userInput })
+            });
+            const data = await response.json();
+
+            const chatHistory = document.getElementById("chat-history");
+            chatHistory.innerHTML += `<p><strong>You:</strong> ${userInput}</p>`;
+            chatHistory.innerHTML += `<p><strong>MetroTex AI:</strong> ${data.response}</p>`;
+            document.getElementById("user-input").value = "";
+        }
+
+        // Create image using DALL·E
+        async function createImage() {
+            const prompt = document.getElementById("user-input").value;
+            if (!prompt) return;
+
+            const response = await fetch("/create_image", {
+                method: "POST",
+                headers: { "Content-Type": "application/json" },
+                body: JSON.stringify({ prompt: prompt })
+            });
+            const data = await response.json();
+
+            const imageContainer = document.getElementById("generated-image");
+            imageContainer.src = `data:image/png;base64,${data.image}`;
+        }
+    </script>
+</body>
+</html>

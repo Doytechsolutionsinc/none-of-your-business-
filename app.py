@@ -11,7 +11,7 @@ import speech_recognition as sr
 app = Flask(__name__)
 
 # Set your OpenAI API key
-openai.api_key = "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"
+openai.api_key = "your-api-key-here"
 
 # Initialize TTS engine
 engine = pyttsx3.init()
